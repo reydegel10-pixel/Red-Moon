@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Red Moon — Tu luz en el universo digital</title>
+  <style>
+    /* ---------- Variables ---------- */
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#7c4dff;
+      --soft:#f3f4f6;
+      --muted:#9aa4b2;
+      --radius:14px;
+      --glass: rgba(255,255,255,0.03);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* ---------- General ---------- */
+    body {
+      margin:0;
+      background: linear-gradient(180deg,#071027 0%, #07121a 60%);
+      color:var(--soft);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:40px 20px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .container{
+      max-width:900px;
+      width:100%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:20px;
+      padding:36px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.7);
+      backdrop-filter: blur(6px);
+    }
+
+    /* ---------- Títulos y texto ---------- */
+    h1{ margin:0; font-size:24px; color:var(--soft) }
+    h1 strong {
+      background: linear-gradient(90deg, #ff66b3, #7c4dff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p.lead{ margin:6px 0 0 0; color:var(--muted) }
+
+    /* ---------- Hero ---------- */
+    .hero{
+      display:flex;
+      gap:24px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .logo {
+      width:92px;
+      height:92px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 92px;
+    }
+
+    /* ---------- Logo animado ---------- */
+    .logo img {
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      animation: glow 2s infinite alternate;
+      border-radius:18px;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 10px #ff66b3, 0 0 20px #7c4dff; }
+      to   { box-shadow: 0 0 25px #ff66b3, 0 0 50px #7c4dff; }
+    }
+
+    /* ---------- Card / Objetivos ---------- */
+    .card{
+      margin-top:22px;
+      background:var(--card);
+      padding:20px;
+      border-radius:12px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.5);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity:1; transform: translateY(0); }
+    }
+
+    /* ---------- Lista de objetivos ---------- */
+    ul.goals{
+      list-style:none;
+      padding:0;
+      margin:12px 0 0 0;
+      display:grid;
+      gap:10px;
+    }
+
+    ul.goals li{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      background:rgba(255,255,255,0.03);
+      padding:12px;
+      border-radius:10px;
+      color:var(--soft);
+      opacity:0;
+      transform: translateX(-20px);
+      animation: slideIn 0.5s forwards;
+    }
+
+    ul.goals li:nth-child(1) { animation-delay:0.2s; }
+    ul.goals li:nth-child(2) { animation-delay:0.4s; }
+    ul.goals li:nth-child(3) { animation-delay:0.6s; }
+    ul.goals li:nth-child(4) { animation-delay:0.8s; }
+    ul.goals li:nth-child(5) { animation-delay:1s; }
+
+    @keyframes slideIn {
+      to { opacity:1; transform:translateX(0); }
+    }
+
+    .dot{
+      min-width:36px;
+      height:36px;
+      background:linear-gradient(135deg,var(--accent),#ff66b3);
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      color:white;
+      font-size:14px;
+      box-shadow:0 4px 12px rgba(124,77,255,0.18);
+    }
+
+    /* ---------- CTA / Botones ---------- */
+    .cta{
+      margin-top:18px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .btn{
+      background:var(--accent);
+      color:white;
+      border:none;
+      padding:10px 16px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow: 0 8px 20px rgba(124,77,255,0.12);
+      text-decoration:none;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(124,77,255,0.25);
+    }
+
+    .ghost{
+      background:transparent;
+      color:var(--soft);
+      border:1px solid rgba(255,255,255,0.06);
+      padding:10px 14px;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:600;
+      transition: all 0.3s ease;
+    }
+
+    .ghost:hover {
+      background: rgba(124,77,255,0.1);
+      color: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    /* ---------- Video ---------- */
+    video{
+      width:100%;
+      border-radius:12px;
+      box-shadow:0 6px 18px rgba(2,6,23,0.5);
+      transition: transform 0.3s ease;
+    }
+
+    video:hover{
+      transform: scale(1.03);
+    }
+
+    /* ---------- Footer ---------- */
+    footer{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width:640px){
+      .hero{ gap:12px }
+      h1{ font-size:20px }
+    }
+  </style>
+</head>
+<body>
+  <main class="container" role="main" aria-labelledby="title">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="logo">
+        <img src="logo.png" alt="Red Moon">
+      </div>
+      <div>
+        <h1 id="title">¡Bienvenida a <strong>Red Moon</strong>!</h1>
+        <p class="lead">Tu compañera para crecer con seguridad, estilo y confianza en el universo digital.</p>
+      </div>
+    </section>
+
+    <!-- Objetivos + Video -->
+    <section class="card" aria-labelledby="objetivos">
+      <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
+        <!-- Izquierda: Texto y lista -->
+        <div style="flex:1; min-width:250px;">
+          <h2 id="objetivos" style="margin:0 0 8px 0;">💫 Nuestros objetivos</h2>
+          <p style="margin:0;color:var(--muted); font-size:14px;">Trabajamos a tu lado para que brilles sin preocupaciones. Estas son las formas en que te apoyamos:</p>
+          <ul class="goals">
+            <li><div class="dot">1</div><div><strong>Impulsar tu presencia</strong><div style="color:var(--muted); font-size:14px;">Promocionamos tu trabajo en redes actuales y emergentes, adaptando la estrategia a tu estilo y audiencia.</div></div></li>
+            <li><div class="dot">2</div><div><strong>Seguridad y filtro personalizado</strong><div style="color:var(--muted); font-size:14px;">Revisamos y filtramos preguntas, comentarios y solicitudes para proteger tu bienestar emocional y tu marca.</div></div></li>
+            <li><div class="dot">3</div><div><strong>Control de visibilidad</strong><div style="color:var(--muted); font-size:14px;">Restringimos la aparición de tu contenido por países o regiones según tus preferencias.</div></div></li>
+            <li><div class="dot">4</div><div><strong>Edición profesional</strong><div style="color:var(--muted); font-size:14px;">Retocamos fotos y videos para que se vean más atractivos y fieles a tu imagen.</div></div></li>
+            <li><div class="dot">5</div><div><strong>Gestión de ingresos</strong><div style="color:var(--muted); font-size:14px;">Te ayudamos a facturar y recibir tus ganancias de forma segura cuando tu comunidad crezca.</div></div></li>
+          </ul>
+        </div>
+
+        <!-- Derecha: Video -->
+        <div style="flex:1; min-width:250px;">
+          <video src="RedMoon.mp4" controls></video>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta" aria-label="contacto">
+        <a class="btn" href="https://wa.me/59170361586?text=Hola%20Red%20Moon!%20Estoy%20interesada%20en%20sus%20servicios.">Comienza hoy</a>
+        <a class="ghost" href="https://wa.me/59170361586?text=Hola%20Red%20Moon!%20Quiero%20saber%20más%20sobre%20sus%20servicios.">Contáctanos</a>
+      </div>
+
+      <footer>
+        <p>En <strong>Red Moon</strong> cuidamos tu crecimiento con calidez y profesionalismo. ¿Lista para brillar?</p>
+      </footer>
+    </section>
+  </main>
+</body>
+</html>
