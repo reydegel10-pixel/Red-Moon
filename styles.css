@@ -10,6 +10,7 @@
       --bg:#0f1724;
       --card:#0b1220;
       --accent:#7c4dff;
+      --accent-2:#ff66b3;
       --soft:#f3f4f6;
       --muted:#9aa4b2;
       --radius:14px;
@@ -18,6 +19,7 @@
     }
 
     /* ---------- General ---------- */
+    html,body{ height:100%; }
     body {
       margin:0;
       background: linear-gradient(180deg,#071027 0%, #07121a 60%);
@@ -27,6 +29,8 @@
       padding:40px 20px;
       display:flex;
       justify-content:center;
+      transition: opacity 0.4s ease;
+      opacity: 0; /* hidden until loader finishes */
     }
 
     .container{
@@ -39,10 +43,76 @@
       backdrop-filter: blur(6px);
     }
 
+    /* ---------- Top notification bar (estilo 2) ---------- */
+    #topNotice {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #ff425f, #ff66b3);
+      color: #fff;
+      padding: 10px 16px;
+      text-align: center;
+      font-weight:600;
+      z-index: 3000;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      transform: translateY(-100%);
+      transition: transform 0.5s cubic-bezier(.2,.9,.2,1);
+    }
+    #topNotice.show { transform: translateY(0); }
+    #topNotice button {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.9);
+      font-size: 16px;
+      cursor: pointer;
+      margin-left: 12px;
+    }
+
+    /* ---------- Loader (pantalla completa) L1: luna roja pulso ---------- */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #060812;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 4000;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .loader-moon {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--accent-2), #ff2a7e 40%, #7c4dff 80%);
+      box-shadow: 0 0 30px rgba(255,102,179,0.18), 0 0 60px rgba(124,77,255,0.12);
+      animation: moonPulse 1.6s infinite alternate ease-in-out;
+    }
+    @keyframes moonPulse {
+      from { transform: scale(0.92); filter: brightness(0.85); box-shadow: 0 0 20px rgba(255,102,179,0.25); }
+      to   { transform: scale(1.06); filter: brightness(1.2); box-shadow: 0 0 45px rgba(124,77,255,0.28); }
+    }
+
+    #loader-text {
+      margin-top:14px;
+      color: var(--muted);
+      font-size:14px;
+      letter-spacing:0.6px;
+    }
+
+    /* hide loader after finished */
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
     /* ---------- Títulos y texto ---------- */
     h1{ margin:0; font-size:24px; color:var(--soft) }
     h1 strong {
-      background: linear-gradient(90deg, #ff66b3, #7c4dff);
+      background: linear-gradient(90deg, var(--accent-2), var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -76,8 +146,8 @@
     }
 
     @keyframes glow {
-      from { box-shadow: 0 0 10px #ff66b3, 0 0 20px #7c4dff; }
-      to   { box-shadow: 0 0 25px #ff66b3, 0 0 50px #7c4dff; }
+      from { box-shadow: 0 0 10px var(--accent-2), 0 0 20px var(--accent); }
+      to   { box-shadow: 0 0 25px var(--accent-2), 0 0 50px var(--accent); }
     }
 
     /* ---------- Card / Objetivos ---------- */
@@ -90,6 +160,7 @@
       opacity: 0;
       transform: translateY(20px);
       animation: fadeIn 1s forwards;
+      animation-delay: 0.4s;
     }
 
     @keyframes fadeIn {
@@ -131,7 +202,7 @@
     .dot{
       min-width:36px;
       height:36px;
-      background:linear-gradient(135deg,var(--accent),#ff66b3);
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
       border-radius:10px;
       display:flex;
       align-items:center;
@@ -204,16 +275,56 @@
       margin-top:18px;
       color:var(--muted);
       font-size:14px;
+      text-align:center;
     }
+
+    /* ---------- Contador (inferior izquierdo) ---------- */
+    #visitCounter {
+      position: fixed;
+      left: 16px;
+      bottom: 14px;
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      box-shadow: 0 6px 20px rgba(2,6,23,0.5);
+      z-index: 2500;
+      transform: translateY(8px);
+      opacity: 0;
+      transition: all 0.6s ease;
+    }
+    #visitCounter.show { transform: translateY(0); opacity: 1; }
 
     /* ---------- Responsive ---------- */
     @media (max-width:640px){
       .hero{ gap:12px }
       h1{ font-size:20px }
+      body { padding: 20px; }
+      .container { padding: 20px; }
+      #visitCounter { left: 10px; bottom: 10px; font-size:12px; }
     }
+
   </style>
 </head>
 <body>
+
+  <!-- Top notification (barra roja) -->
+  <div id="topNotice" role="status" aria-live="polite">
+    Monetiza tu contenido e interactúa con tu audiencia de forma privada.
+    <button id="topNoticeClose" aria-label="Cerrar notificación">✕</button>
+  </div>
+
+  <!-- Loader (pantalla completa, L1) -->
+  <div id="loader" aria-hidden="false">
+    <div class="loader-moon" role="img" aria-label="Cargando — luna roja animada"></div>
+    <div id="loader-text">Cargando Red Moon...</div>
+  </div>
+
+  <!-- Contador visitas -->
+  <div id="visitCounter" aria-hidden="true">Red Moon ha sido vista 0 veces</div>
+
+  <!-- ======= Contenido principal (tu HTML original) ======= -->
   <main class="container" role="main" aria-labelledby="title">
     <!-- Hero -->
     <section class="hero">
@@ -250,8 +361,8 @@
 
       <!-- CTA -->
       <div class="cta" aria-label="contacto">
-        <a class="btn" href="https://wa.me/59170361586?text=Hola%20Red%20Moon!%20Estoy%20interesada%20en%20sus%20servicios.">Comienza hoy</a>
-        <a class="ghost" href="https://wa.me/59170361586?text=Hola%20Red%20Moon!%20Quiero%20saber%20más%20sobre%20sus%20servicios.">Contáctanos</a>
+        <a class="btn" href="https://wa.me/59161606422?text=Hola%20Red%20Moon!%20Estoy%20interesada%20en%20sus%20servicios.">Comienza hoy</a>
+        <a class="ghost" href="https://wa.me/59161606422?text=Hola%20Red%20Moon!%20Quiero%20saber%20más%20sobre%20sus%20servicios.">Contáctanos</a>
       </div>
 
       <footer>
@@ -259,5 +370,101 @@
       </footer>
     </section>
   </main>
+
+  <script>
+    /* ===== Loader logic =====
+       - Shows full-screen loader (L1). Loader auto-hides after ~2.3s.
+       - After loader hides, reveal body (opacity -> 1).
+    */
+    (function() {
+      const loader = document.getElementById('loader');
+      const body = document.body;
+
+      // Ensure top notice shows after small delay (but while loader active it's hidden by loader)
+      const topNotice = document.getElementById('topNotice');
+      setTimeout(() => topNotice.classList.add('show'), 2300);
+
+      // Hide loader after 2.3s (matches user's request for a clear load animation)
+      // then reveal body
+      window.addEventListener('load', () => {
+        // Safety: ensure at least 800ms after load to keep smoothness if load was instant
+        setTimeout(hideLoader, 600);
+      });
+
+      // also fallback: hide after 2400ms if load event slow/never fires
+      setTimeout(hideLoader, 2400);
+
+      function hideLoader(){
+        if (!loader.classList.contains('hidden')) {
+          loader.classList.add('hidden');
+          // reveal main page
+          body.style.opacity = '1';
+          // reveal visitCounter after short delay
+          setTimeout(() => {
+            const vc = document.getElementById('visitCounter');
+            vc.classList.add('show');
+            vc.setAttribute('aria-hidden', 'false');
+          }, 400);
+        }
+      }
+    })();
+
+    /* ===== Top notice close button ===== */
+    (function(){
+      const btn = document.getElementById('topNoticeClose');
+      const notice = document.getElementById('topNotice');
+      btn.addEventListener('click', () => {
+        notice.classList.remove('show');
+        // optionally remember dismissal for 1 day
+        try {
+          localStorage.setItem('redmoon_notice_closed', Date.now());
+        } catch(e){}
+      });
+
+      // If closed recently, keep it hidden
+      try {
+        const closed = localStorage.getItem('redmoon_notice_closed');
+        if (closed && (Date.now() - Number(closed) < 1000 * 60 * 60 * 24)) {
+          notice.classList.remove('show');
+        }
+      } catch(e){}
+    })();
+
+    /* ===== Fake visit counter (random initial, +1 each reload, persisted) =====
+       Behavior:
+       - key: 'redmoon_visits'
+       - if missing: create random integer between 1200 and 4800
+       - on each page load increment by 1 and save
+       - display: "Red Moon ha sido vista X veces"
+    */
+    (function(){
+      const key = 'redmoon_visits_v1';
+      let visits;
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw === null) {
+          // create initial random between 1200 and 4800
+          const min = 1200, max = 4800;
+          visits = Math.floor(Math.random() * (max - min + 1)) + min;
+        } else {
+          visits = parseInt(raw, 10) || 0;
+        }
+        // increment (count this new visit)
+        visits = visits + 1;
+        localStorage.setItem(key, String(visits));
+      } catch(e) {
+        // if localStorage fails, fall back to random display (non-persistent)
+        visits = Math.floor(Math.random() * (4800 - 1200 + 1)) + 1200;
+      }
+
+      // format with thousands separator
+      const formatted = visits.toLocaleString('es-ES');
+      const el = document.getElementById('visitCounter');
+      el.textContent = `Red Moon ha sido vista ${formatted} veces`;
+
+      // small pulse animation to draw attention (temporary)
+      setTimeout(() => el.classList.add('show'), 800);
+    })();
+  </script>
 </body>
 </html>
